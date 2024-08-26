@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Satoshi's Summer</title>
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" href="https://github.com/mx1000m/satoshissummer/raw/ac05f324e42428c6276bd3600f0b0eeda8b005f2/favicon2.png">
+
 
     <style>
         body, html {
@@ -19,22 +21,93 @@
             display: flex;
             overflow: hidden;
         }
-        .wrapper {
+
+
+
+
+
+        /* Loading Overlay */
+        #loadingOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #0052FF;
+            z-index: 10000;
             display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #progressBar {
+            width: 80%;
+            height: 30px;
+            background-color: #0052ff;
+            border-radius: 15px;
+            overflow: hidden;
+            margin-top: 20px;
+        }
+
+        #progressBar div {
+            height: 100%;
+            width: 0;
+            background-color: #9fbeff;
+            border-radius: 15px;
+            transition: width 0.2s ease-in-out;
+        }
+
+
+        #progressTitle {
+            font-size: 28px; /* Increased font size */
+            color: #9fbeff;
+            margin-bottom: 20px; /* Adjust the space between the title and the number */
+letter-spacing: 3px;
+text-transform: uppercase;
+font-weight: bold;
+
+
+        }
+
+
+
+        #progressText {
+            font-size: 18px;
+            color: #9fbeff;
+        }
+
+
+
+        .wrapper {
+            display: none; /* Hidden by default until loading completes */
             width: 100%;
             height: 100%;
             overflow: auto;
         }
-        .sidebar {
-            width: 80px;
-            background-color: #000000;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding-top: 20px;
-            box-shadow: -2px 0 5px rgba(0,0,0,0.1);
-            border-left: 1px solid #33353c; 
-        }
+
+
+
+
+
+
+
+
+.sidebar {
+    width: 80px;
+    background-color: #000000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 20px;
+    box-shadow: -2px 0 5px rgba(0,0,0,0.1);
+    border-left: 1px solid #33353c;
+    position: sticky; /* Makes the sidebar sticky */
+    top: 0; /* The sidebar will stick to the top of the viewport */
+    height: 100vh; /* Ensures the sidebar takes up the full height of the viewport */
+    overflow-y: auto; /* Allows scrolling within the sidebar if content overflows */
+    overflow-x: hidden; /* Prevents horizontal scrolling */
+}
         .icon-list {
             display: flex;
             flex-direction: column;
@@ -64,37 +137,61 @@
             margin-bottom: -30px;
             padding: 10px 20px;
         }
-        .search-bar {
-            position: relative;
-            width: 550px;
-        }
-        .search-bar input {
-            width: 100%;
-            height: 25px;
-            padding: 8px 60px 8px 80px;
-            border-radius: 20px;
-            border: none;
-            outline: none;
-            background-color: #33353c;
-            color: white;
-            font-size: 16px;
-            text-align: left;
+
+
+
+
+
+
+/* Wrapper to hold the wallet icon and search bar together */
+.search-bar-wrapper {
+    display: flex;
+    align-items: center;
+}
+
+.search-bar {
+    position: relative;
+    width: 550px;
+}
+
+.search-bar input {
+    width: 100%;
+    height: 25px;
+    padding: 8px 60px 8px 80px; /* Adjust padding-left to make space for wallet icon */
+    border-radius: 20px;
+    border: none;
+    outline: none;
+    background-color: #33353c;
+    color: white;
+    font-size: 16px;
+    text-align: left;
             transform: scaleX(-1);
-            transition: background-color 0.3s ease;
-        }
-        .search-bar input:hover {
-            background-color: #3b3d44;
-        }
-        .search-bar .search-icon {
-            position: absolute;
-            right: -100px;
-            top: 50%;
+
+    transition: background-color 0.3s ease;
+}
+
+.search-bar input:hover {
+    background-color: #3b3d44;
+}
+
+.search-bar .search-icon {
+    position: absolute;
+    right: -100px; /* Adjusted so the search icon is properly placed */
+    top: 50%;
             transform: translateY(-50%) scaleX(-1);
-            pointer-events: none;
-            width: 16px;
-            height: 16px;
-            color: white;
-        }
+    pointer-events: none;
+    width: 16px;
+    height: 16px;
+    color: white;
+}
+
+
+
+
+
+
+
+
         .banner {
             grid-column: 1 / span 1;
             background-color: #2151f5;
@@ -102,7 +199,8 @@
             border-radius: 20px;
             height: 70px;
             overflow: hidden;
-            margin-top: -25px;
+            margin-top: 0px;
+margin-bottom: -45px;
         }
         .banner-image {
             width: 100%;
@@ -113,6 +211,7 @@
         .content-wrapper {
             display: flex;
             gap: 0px;
+Margin-top: 40px;
         }
         .content {
             background-color: #212121;
@@ -125,15 +224,23 @@
             width: 50%;
             position: relative;
         }
-        .image-promo {
-            background-color: #212121;
-            padding: 0px;
-            border-radius: 20px 0px 0px 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 50%;
-        }
+
+
+
+
+
+.image-promo {
+    position: relative; /* Add this line */
+    background-color: #212121;
+    padding: 0px;
+    border-radius: 20px 0px 0px 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50%;
+    overflow: hidden; /* Ensures that children don't overflow the rounded corners */
+}
+
         .image-promo img {
             width: 100%;
             height: 100%;
@@ -156,25 +263,55 @@
             top: 10px;
             right: 10px;
         }
-        .mint-button {
-            background-color: white;
-            color: black;
-            border: none;
-            border-radius: 25px;
-            padding: 10px 20px;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 10px;
-            width: fit-content;
-        }
+
+
+#promoScratchCanvas {
+    position: absolute; /* This keeps it absolute but relative to the .image-promo now */
+    top: 0;
+    left: 0;
+    cursor: crosshair;
+    z-index: 2; /* Ensures it's on top of the underlying image */
+}
+
+
+
+
+
+
+
+
+
+
+
+.mint-button {
+    display: flex;
+    justify-content: space-between; /* Align items to each end */
+    align-items: center;
+    width: 100%;
+    background-color: white;
+    color: black;
+    border: none;
+    border-radius: 25px;
+    padding: 10px 20px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    box-sizing: border-box;
+            transform: scaleX(-1);
+
+}
         .mint-button:hover {
             background-color: #eee;
         }
-        .points {
-            font-size: 14px;
-            color: #999;
-            margin-top: 20px;
-        }
+.points {
+    font-size: 13px; /* Adjusted for better visibility */
+Font-weight: normal;
+    color: #999; /* Subtle grey for less prominence */
+    margin: 0; /* Remove any default margin */
+    display: flex;
+    align-items: center; /* Center align vertically */
+    justify-content: center; /* Center align horizontally */
+}
         .divider {
             border: none;
             border-top: 1px solid #33353c;
@@ -190,38 +327,44 @@
             width: calc(100% + 50px);
             box-sizing: content-box;
         }
-        /* Modal styling */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0, 0, 0, 0.5);
-        }
-        .modal-content {
-            background-color: #333;
-            margin: 15% auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 80%;
-            max-width: 400px;
-            border-radius: 8px;
-            color: #fff;
-        }
-        .modal-content input {
-            width: calc(100% - 20px);
-            margin-bottom: 10px;
-            padding: 10px;
-            border-radius: 5px;
-            border: none;
-            outline: none;
-            background-color: #444;
-            color: white;
-        }
+        
+
+
+
+    /* Modal styling */
+    .modal {
+        display: none;
+        position: fixed;
+    z-index: 9999; /* Ensure this is higher than other elements */
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+
+.modal-content {
+    background-color: #0052FF;
+    margin: 15% auto;
+    padding: 20px;
+    border: 2px solid #fff;
+    width: 100%; /* Default width for all modals */
+    max-width: 400px; /* Default max width for all modals */
+    border-radius: 8px;
+    color: #fff;
+    position: relative; /* Make sure this is set */
+    align-items: center; /* Center align items horizontally */
+    justify-content: center;
+}
+
+.modal-content hr {
+    border: none; /* Remove the default border */
+    border-top: 1px solid #fff; /* Add a solid white border on top */
+    background-color: #fff; /* Ensure the background color is white */
+    height: 1px; /* Set the height for the horizontal line */
+    margin: 20px 0; /* Optional: Adjust the vertical spacing */
+}
         .modal-content button {
             background-color: #f093cc;
             color: #000;
@@ -234,155 +377,810 @@
         .modal-content button:hover {
             background-color: #d87ab8;
         }
-        .close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-        }
+.close {
+    color: #fff;
+    font-size: 28px;
+    font-weight: bold;
+    position: absolute;
+    top: 0px; /* Adjust this value to move the button vertically */
+    right: 10px; /* Adjust this value to move the button horizontally */
+    cursor: pointer;
+}
         .close:hover,
         .close:focus {
-            color: white;
+            color: #87aeff;
             text-decoration: none;
             cursor: pointer;
         }
+
+
+    /* Specific width for the correct answer modal */
+    #correctModal .modal-content {
+        max-width: 40%; /* Adjust this value to change the width */
+    }
+
+
+
+        .wallet-icon-container {
+            margin-right: 10px; /* Space between wallet icon and search bar */
+            width: 40px;
+            height: 40px;
+            background-color: #444;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden; /* Ensure the image doesn't overflow */
+            transition: background-color 0.3s ease; /* Smooth background color transition */
+            position: relative; /* Necessary for positioning the hover image */
+        }
+
+        .wallet-icon {
+            width: 25px;
+            height: 25px;
+            transition: opacity 0.3s ease; /* Smooth fade transition */
+            cursor: pointer;
+        }
+
+        .wallet-icon-container:hover .wallet-icon {
+            opacity: 0; /* Fade out the current icon */
+        }
+
+        .wallet-icon-container:hover {
+            background-color: #555; /* Optionally change background color on hover */
+        }
+
+        .wallet-icon-container::before {
+            content: '';
+            background-image: url('https://github.com/mx1000m/satoshissummer/raw/dd277e925d2ecd8ad048a35abe2a2fad9653cb2e/walleticon2.png');
+            background-size: cover;
+            background-position: center;
+            position: absolute;
+            width: 25px; /* Ensure the new icon is the same size as the old one */
+            height: 25px; /* Ensure the new icon is the same size as the old one */
+            opacity: 0;
+            transition: opacity 0.3s ease; /* Smooth fade transition */
+        }
+
+        .wallet-icon-container:hover::before {
+            opacity: 1; /* Fade in the new icon */
+        }
+
+
+
+
+
+.satoshi-revenge {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end; /* Align content to the right */
+    margin-top: 40px; /* Adjust as needed */
+    width: 100%; /* Ensure the container takes full width */
+}
+
+.revenge-image {
+    width: 40px; /* Adjust size as needed */
+    height: 40px; /* Adjust size as needed */
+    margin-left: 15px; /* Space between text and image */
+    background-color: #000; /* Black background (you can change this if needed) */
+    border-radius: 4px; /* Optional: rounding the corners */
+}
+
+.satoshi-revenge span {
+    font-size: 14px; /* Adjust text size as needed */
+    color: white; /* Text color */
+    font-weight: bold; /* Makes the text bold */
+    transform: scaleX(-1); /* Mirrors the text */
+    display: inline-block; /* Ensure transform works correctly */
+}
+
+
+
+
+.content h1, .content p {
+    text-align: left;
+    transform: scaleX(-1); /* Mirrors the text */
+
+}
+
+
+
+
+
+
+
+.arrows-icon {
+    position: relative;
+    width: 30px; /* Width of the container */
+    height: 30px; /* Height of the container */
+    border-radius: 50%; /* Ensures the div is circular */
+    cursor: pointer;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s ease, width 0.3s ease, height 0.3s ease;
+}
+
+.arrows-icon img {
+    width: 100%; /* Image fills the container */
+    height: 100%; /* Image fills the container */
+    transition: opacity 0.1s ease;
+}
+
+.arrows-icon:hover {
+    background-color: rgba(0, 82, 255, 1); /* Blue background with 50% opacity */
+    width: 25px; /* Reduce the width on hover */
+    height: 25px; /* Reduce the height on hover */
+}
+
+.arrows-icon:hover img {
+    opacity: 0; /* Hide the image on hover */
+}
+
+
+
+.sunicon {
+    position: relative;
+    width: 30px; /* Width of the container */
+    height: 30px; /* Height of the container */
+    border-radius: 50%; /* Ensures the div is circular */
+    cursor: pointer;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s ease, width 0.3s ease, height 0.3s ease;
+}
+
+.sunicon img {
+    width: 100%; /* Image fills the container */
+    height: 100%; /* Image fills the container */
+    transition: opacity 0.1s ease;
+}
+
+.sunicon:hover {
+    background-color: rgba(0, 82, 255, 1); /* Blue background with 50% opacity */
+    width: 25px; /* Reduce the width on hover */
+    height: 25px; /* Reduce the height on hover */
+}
+
+.sunicon:hover img {
+    opacity: 0; /* Hide the image on hover */
+}
+
+
+
+
+
+
+.banner-text {
+    color: #000; /* Blue color */
+    text-align: center; /* Center the text horizontally */
+    font-size: 13px; /* Optional: Adjust the font size as needed */
+    padding: 0px 0px; /* Adds padding around the text */
+    margin: 0 auto; /* Ensures the text is centered and has no external margins */
+    width: 100%; /* Ensures the text stretches across the banner width */
+letter-spacing: 2px;
+Margin-top: 34px;
+Margin-bottom: -50px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+.shop-section {
+    text-align: right; /* Aligns the text to the right */
+    margin-top: 30px;
+    margin-bottom: 30px;
+    text-align: left;
+    transform: scaleX(-1); /* Mirrors the text */
+
+}
+
+.shop-section h2 {
+    font-size: 22px;
+    margin-bottom: 10px;
+    color: #fff;
+    letter-spacing: 1px;
+}
+
+.shop-section p {
+    font-size: 16px;
+    margin-bottom: 20px;
+    color: #bbb;
+    letter-spacing: 1px;
+}
+
+
+
+
+
+
+
+        .merchandise-container {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin-top: 20px;
+    transform: scaleX(-1); /* Mirrors the text */
+
+        }
+
+        .merchandise-item {
+            background-color: #33353c;
+            width: 350px;
+            height: 350px;
+            border-radius: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: transform 0.3s ease;
+Margin: 20px;
+        }
+
+
+        .merchandise-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 20px;
+        }
+
+
+
+
+
+
+
+
+
+.nav-menu {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #000;
+    margin-bottom: 20px;
+    margin-top: 20px;
+    text-align: left;
+    transform: scaleX(-1); /* Mirrors the text */
+}
+
+.nav-menu a {
+    color: #fff;
+    margin-right: 25px;
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: bold;
+    position: relative; /* Required for positioning the underline */
+
+}
+
+.nav-menu .active::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -10px; /* Move underline 10px lower */
+    width: 100%;
+    height: 2px;
+    background-color: #ff69b4; /* Pink color for the underline */
+}
+
+        .nav-menu .active {
+            color: #ff69b4; /* Pink color for the active tab */
+        }
+
+
+
+
+
+
+
+
+        /* Content Boxes */
+        .content-boxes {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .content-box {
+            width: 48%;
+            height: 400px;
+            background-color: #33353c;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        .content-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+        .content-box:hover {
+            transform: scale(1.05);
+        }
+
+
+
+
+
+
+
+/* Overlay that will cover the entire page */
+.overlay {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    top: 0;
+    left: 0;
+    background-color: rgba(255, 255, 255, 0.95); /* White background with opacity */
+    z-index: 1000; /* Sit on top */
+    justify-content: center;
+    align-items: center;
+    overflow: hidden; /* Prevent scrolling */
+    transition: opacity 0.5s; /* Smooth transition for the overlay */
+}
+
+
+/* Style for the centered message */
+.centered-message {
+    text-align: center;
+    color: #9fbeff;
+    font-size: 14px;
+    padding: 20px;
+    border: 0px solid black;
+    background-color: rgba(0, 0, 0, 0); /* Slight grey background for the message box */
+}
+
+
+.overlay .close {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 30px;
+    color: black;
+    cursor: pointer;
+}
+
+
+
+
+
+
+
+
+
+#clockModal .modal-content {
+    max-width: 600px; /* Increase the width */
+    width: 90%; /* Adjust width to a percentage or fixed pixel value */
+    text-align: center;
+    padding: 20px;
+    border: 2px solid #fff;
+    background-color: #0052FF;
+    border-radius: 8px;
+    color: #fff;
+    position: relative; 
+    align-items: center; 
+    justify-content: center;
+}
+
+
+
+
+
+/* Specific styling for planetModal if needed */
+#planetModal .modal-content {
+    max-width: 500px; /* Adjust the width as needed */
+    width: 80%; /* Adjust width to a percentage or fixed pixel value */
+    text-align: center;
+    padding: 20px;
+    border: 2px solid #fff;
+    background-color: #0052FF;
+    border-radius: 8px;
+    color: #fff;
+    position: relative;
+    align-items: center;
+    justify-content: center;
+}
+
+
+
+
+
+
+
+
+/* Pill button styling */
+.pill-button {
+    background-color: #ff69b4;
+    color: #000;
+    border: none;
+    border-radius: 50px;
+    padding: 10px 20px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: background-color 0.3s ease;
+}
+
+.pill-button:hover {
+    background-color: #ff85c1;
+}
+
+
+
+
+
+
+
+
+/* Wheel container styling */
+#wheel-container {
+    margin: 20px auto;
+    width: 300px;
+    height: 300px;
+    position: relative;
+}
+
+/* Pill button styling */
+.pill-button {
+    background-color: #ff69b4;
+    color: #fff!important;
+    border: none;
+    border-radius: 50px;
+    padding: 10px 20px;
+    font-size: 18px;
+font-weight: normal!important;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: background-color 0.3s ease;
+}
+
+.pill-button:hover {
+    background-color: #ff85c1;
+}
+
+
+
+
+
+
+#resultOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 9999; /* Should be lower than the popup but higher than other content */
+    display: none; /* Hidden by default */
+}
+
+
+
+
+
+
+
+
+
+#playModal .modal-content {
+    max-width: 600px; /* Adjust the width as needed */
+    width: 80%; /* Adjust width to a percentage or fixed pixel value */
+    text-align: center;
+    padding: 20px;
+    border: 2px solid #fff;
+    background-color: #0052FF;
+    border-radius: 8px;
+    color: #fff;
+    position: relative;
+    align-items: center;
+    justify-content: center;
+font-weight: 400;
+}
+
+
+
+
+
+
+
+
+
+.confetti-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 10001; /* Ensure this is higher than your modal's z-index */
+}
+
+
+
+
+
+
+
+
+
+
+
+
     </style>
 </head>
+
+
+
+
+
+
+
+
+
+
+
+
+
 <body>
+
+
+
+<div id="loadingOverlay">
+    <!-- Title above the loading bar -->
+    <div id="progressTitle">Fortune favors the based</div>
+    
+    <!-- Loading Bar and Progress Text -->
+    <div id="progressText">0%</div>
+    <div id="progressBar">
+        <div></div>
+    </div>
+</div>
+
+
+
     <div class="wrapper">
         <div class="main-content">
             <div class="header">
-                <div class="search-bar">
-                    <input id="searchInput" type="text" placeholder="Search coins, NFTs, apps..." onkeydown="checkAnswer(event)">
-                    <img src="https://github.com/mx1000m/satoshissummer/raw/43538dc7982d5ec5426cb215153699360aeed033/searchicon.png" class="search-icon" alt="Search Icon">
+    <div class="search-bar-wrapper">
+
+                    <div class="wallet-icon-container" id="walletButton">
+            <img src="https://github.com/mx1000m/satoshissummer/raw/c775ef1511333075dda87293339381d52f6e45f4/walleticon.png" class="wallet-icon" alt="Wallet Icon">
+        </div>
+        <div class="search-bar">
+            <input id="searchInput" type="text" placeholder="Input 12 words in correct order, and watch the light appear..." onkeydown="checkAnswer(event)">
+            <img src="https://github.com/mx1000m/satoshissummer/raw/43538dc7982d5ec5426cb215153699360aeed033/searchicon.png" class="search-icon" alt="Search Icon">
+        </div>
                 </div>
             </div>
 
             <hr class="divider">
 
             <div class="banner">
-                <img src="https://github.com/mx1000m/satoshissummer/raw/adb0d21bffa910eaca4319483a258a3116fcc719/rocs.gif" alt="Onchain Summer" class="banner-image">
+                <img src="https://github.com/mx1000m/satoshissummer/raw/f2deecbcf36972652217cbc8a0d3bb4cc832b151/rocs2.gif" alt="Onchain Summer" class="banner-image">
             </div>
+<p class="banner-text">everything you need is right in front of your eyes...</p>
 
             <div class="content-wrapper">
-                <div class="image-promo">
-                    <img src="https://github.com/mx1000m/satoshissummer/raw/38f16c4ab81d0c8d7c5a96940b874e9b1a6833f4/rsatoshi.jpg" alt="Wish You Were Onchain" class="promo-image">
-                </div>
+                
 
-                <div class="content">
+
+
+<div class="image-promo">
+    <canvas id="promoScratchCanvas" width="600" height="500" style="position: absolute; cursor: crosshair; z-index: 2;"></canvas>
+    <img src="https://github.com/mx1000m/satoshissummer/raw/2347a9be5fedf01889e265859bb4f3fe5b56663a/I%2CSatoshi%2Cam%20the%20start%20of%20this%20riddle.jpg" alt="Wish You Were Onchain" class="promo-image" style="position: relative; z-index: 1;">
+</div>
+
+
+
+
+
+<div class="content">
                     <div class="drop-badge">FRESH DROP💧</div>
-                    <h1>Wish You Were Onchain</h1>
+                    <div class="satoshi-revenge">
+                        <span><b>SATOSHI'S REVENGE</b></span>
+                        <img src="https://github.com/mx1000m/satoshissummer/raw/3f4aedf280a5c608aa59078d5b67f44182e9c9ba/talktomenerdy.jpg" alt="SATOSHI'S REVENGE" class="revenge-image">
+                    </div>
+                    <h1>Satoshi's hitting the beach!</h1>
                     <p>
-                        Mint an NFT postcard for the chance to win a free Virgin Voyages cruise, from MintPass.
+Dive into the Onchain Summer backstage, crack the code, and claim 100,000 Onchain Summer points!
+
                     </p>
-                    <button class="mint-button">Mint</button>
-                    <div class="points">+1000 points</div>
+                    <button class="mint-button">
+                        <span class="button-text">Play</span>
+                        <span class="points">+100,000 points</span>
+                    </button>
+                </div>
+            </div>
+
+
+
+
+
+
+            <!-- Navigation Menu -->
+            <div class="nav-menu">
+                <a href="#" class="active">Today</a>
+                <a href="#">Play</a>
+                <a href="#">Progress</a>
+                <a href="#">Shop</a>
+            </div>
+
+            <!-- Content Boxes -->
+            <div class="content-boxes">
+                <div class="content-box">
+                    <img src="https://github.com/mx1000m/satoshissummer/raw/c4d651b9c58e8866feee6d224200f529daa84679/chintan's-favorite-food%3F.jpg" alt="What is Chintan ordering at a restaurant?">
+                </div>
+                <div class="content-box">
+                    <img src="https://github.com/mx1000m/satoshissummer/raw/7e5131d743560012b7cf8fc6e46068f0e906f11b/summerpass.png" alt="Summer Summer Summer Summer Summer Summer Summer Summer Summer Summer Summer Summer Summer Summer Summer">
+                </div>
+            </div>
+
+
+
+
+
+
+
+
+
+            <!-- Moved Shop Section -->
+            <div class="shop-section">
+                <h2>Shop onchain</h2>
+                <p>Shop with USDC and redeem points for prizes as you level up</p>
+                <div class="merchandise-container">
+                    <div class="merchandise-item">
+                        <img src="https://github.com/mx1000m/satoshissummer/raw/5050464a55598965c40d759941ce9bc1151d9320/cool1.jpg" alt="Merchandise 1">
+                    </div>
+                    <div class="merchandise-item">
+                        <img src="https://github.com/mx1000m/satoshissummer/raw/5050464a55598965c40d759941ce9bc1151d9320/cool2.jpg" alt="Merchandise 2">
+                    </div>
+                    <div class="merchandise-item">
+                        <img src="https://github.com/mx1000m/satoshissummer/raw/269cc19f166d77963cdf01b043bfec52dbdc924b/cool3.jpg" alt="Merchandise 3">
+                    </div>
                 </div>
             </div>
         </div>
+
+
+
+
+
+
+
+
+<!-- Overlay for the fade effect -->
+<div class="overlay" id="overlay">
+    <div class="centered-message">
+        An answer lies within this riddle:<br><br>
+        "<b>F</b>rigid <b>R</b>ealms <b>O</b>ften <b>S</b>parkle <b>T</b>imelessly."<br><br>
+        _ _ _ _ _
+    </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
 
         <div class="sidebar">
             <div class="icon-list">
                 <div class="icon">
                     <img src="https://github.com/mx1000m/satoshissummer/raw/020cbe6cb24b3f191223d87b44885e08767733e2/baseicon.png" alt="Home" style="width: 32px; height: 32px;">
                 </div>
-                <div class="icon">
+                <div class="icon sunicon">
                     <img src="https://github.com/mx1000m/satoshissummer/raw/4f05989b0f84024274ced6b0fbffebcf98332266/sunicon.png" alt="Hint" style="width: 23px; height: 23px;">
                 </div>
-                <div class="icon">
-                    <img src="https://github.com/mx1000m/satoshissummer/raw/4f05989b0f84024274ced6b0fbffebcf98332266/clockicon.png" alt="Clock" style="width: 23px; height: 23px;">
-                </div>
-                <div class="icon">
-                    <img src="https://github.com/mx1000m/satoshissummer/raw/4f05989b0f84024274ced6b0fbffebcf98332266/planeticon.png" alt="World" style="width: 23px; height: 23px;">
-                </div>
+
+
+
+<div class="icon arrows-icon" onclick="openModal('clockModal')">
+    <img src="https://github.com/mx1000m/satoshissummer/raw/bda8b1ef26835d1338ad0b18af9e538e7b0f4bd2/clockicon.png" alt="Clock" style="width: 23px; height: 23px;">
+</div>
+
+
+
+
+<div class="icon arrows-icon" onclick="openModal('planetModal')">
+    <img src="https://github.com/mx1000m/satoshissummer/raw/4f05989b0f84024274ced6b0fbffebcf98332266/planeticon.png" alt="World" style="width: 23px; height: 23px;">
+</div>
+
 
                 <hr class="sidebar-divider">
 
-                <div class="icon">
+<a href="https://www.enjoy.tech/" target="_blank" rel="noopener noreferrer">
+                <div class="icon arrows-icon">
                     <img src="https://github.com/mx1000m/satoshissummer/raw/4f05989b0f84024274ced6b0fbffebcf98332266/plusicon.png" alt="Plus" style="width: 30px; height: 30px;">
                 </div>
-                <div class="icon">
-                    <img src="https://github.com/mx1000m/satoshissummer/raw/4f05989b0f84024274ced6b0fbffebcf98332266/arrowsicon.png" alt="Flip" style="width: 30px; height: 30px;">
-                </div>
-                <div class="icon">
-                    <img src="https://github.com/mx1000m/satoshissummer/raw/4f05989b0f84024274ced6b0fbffebcf98332266/arrowicon.png" alt="Arrow" style="width: 30px; height: 30px;">
-                </div>
+
+
+<a href="https://wallet.coinbase.com/" target="_blank" rel="noopener noreferrer">
+    <div class="icon arrows-icon">
+        <img src="https://github.com/mx1000m/satoshissummer/raw/4f05989b0f84024274ced6b0fbffebcf98332266/arrowsicon.png" class="default-icon">
+    </div>
+</a>
+
+
+<div class="icon arrows-icon" onclick="openModal('arrowModal')">
+    <img src="https://github.com/mx1000m/satoshissummer/raw/4f05989b0f84024274ced6b0fbffebcf98332266/arrowicon.png" alt="Arrow" style="width: 30px; height: 30px;">
+</div>
+
             </div>
         </div>
     </div>
 
-    <!-- Modal for incorrect answer -->
+
+
+
+    <!-- MODAL for incorrect answer -->
     <div id="incorrectModal" class="modal">
-        <div class="modal-content">
+        <div class="modal-content" style="text-align: center;">
             <span class="close" onclick="closeModal('incorrectModal')">&times;</span>
-            <p>Sorry riddler your answer isn't based enough, search further</p>
+            <p><strong>Total miss, riddler! <br>Grab your compass and set a new course."</p>
         </div>
     </div>
 
-    <!-- Modal for correct answer -->
+    <!-- MODAL for correct answer -->
     <div id="correctModal" class="modal">
-        <div class="modal-content">
+        <div class="modal-content" style="text-align: center;">
             <span class="close" onclick="closeModal('correctModal')">&times;</span>
-            <p>You are Super Based! Enter your wallet address and Twitter handle. If you made it among the 10 first to solve the riddle we'll reach out to you.</p>
-            <input type="text" id="walletInput" placeholder="Enter Wallet Address">
-            <input type="text" id="twitterInput" placeholder="Enter Twitter Handle">
-            <button onclick="submitData()">Submit</button>
+            <p><strong>SUPER BASED! <br>YOU ARE ALMOST THERE...</strong></p>
+<hr>
+            <p>In Coinbase Wallet's app, my secrets you unwrap,<br>Text "satoshissecret.eth", that's where they do land next...</p>
+<hr>       
+ </div>
+    </div>
+
+
+<!-- MODAL for word match summary -->
+<div id="wordMatchModal" class="modal">
+    <div class="modal-content" style="text-align: center;">
+        <span class="close" onclick="closeModal('wordMatchModal')">&times;</span>
+        <p id="wordMatchMessage"><strong>Your result will be displayed here.</strong></p>
+    </div>
+</div>
+
+
+
+<!-- MODAL for WALLET -->
+<div id="walletModal" class="modal">
+    <div class="modal-content" style="text-align: center;">
+            <span class="close" onclick="closeModal('walletModal')">&times;</span>
+            <h1>Get started onchain</h1>
+            <p>Hook your wallet to a sketchy webpage? For real?!<br> Do your homework pal, <u>stay</u> safe!</p>
         </div>
     </div>
 
-<script>
-    const correctAnswer = "Satoshi enjoy frost pizza during summer base stay cool soon banana zone";
 
-    function checkAnswer(event) {
-        if (event.key === "Enter") {
-            const input = document.getElementById("searchInput").value.trim().toLowerCase();
-            if (input === correctAnswer.toLowerCase()) {
-                openModal('correctModal');
-            } else {
-                openModal('incorrectModal');
-            }
-        }
-    }
 
-    function openModal(modalId) {
-        document.getElementById(modalId).style.display = "block";
-    }
-
-    function closeModal(modalId) {
-        document.getElementById(modalId).style.display = "none";
-    }
-
-    function submitData() {
-        const wallet = document.getElementById("walletInput").value;
-        const twitter = document.getElementById("twitterInput").value;
-
-        if (wallet && twitter) {
-            const data = {
-                walletAddress: wallet,
-                twitterHandle: twitter
-            };
-            fetch('https://script.google.com/macros/s/AKfycbxtg6fJ8oO_osqlmHiU0lHanoOuQ8PdG6bzkvbYYyKzm5xh6Z9UvsfnqgKzfe5DwCnM/exec', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data),
-            })
-            .then(response => response.text())
-            .then(data => {
-                console.log('Success:', data);
-                alert("Data has been submitted. Thank you!");
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-                alert("There was an error submitting your data.");
-            });
-            closeModal('correctModal');
-        } else {
-            alert("Please fill out both fields.");
-        }
-    }
-</script>
 
 
     <!-- Modal for NFT Details -->
@@ -394,27 +1192,593 @@
         </div>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            var modal = document.getElementById('nftModal');
-            var btn = document.querySelector('.mint-button');
-            var span = document.getElementsByClassName('close')[0];
 
-            btn.onclick = function() {
-                modal.style.display = "block";
-            }
 
-            span.onclick = function() {
-                modal.style.display = "none";
-            }
 
-            window.onclick = function(event) {
-                if (event.target == modal) {
-                    modal.style.display = "none";
-                }
-            }
+
+
+
+<!-- MODAL for clock icon -->
+<div id="clockModal" class="modal">
+    <div class="modal-content" style="text-align: center;">
+        <span class="close" onclick="closeModal('clockModal')">&times;</span>
+        <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 20px;">
+            <img src="https://github.com/mx1000m/satoshissummer/raw/2918fff455aa74a6c769abd081180890172db3a8/durian.jpg" alt="Durian" style="width: 150px; height: 150px;">
+            <span style="margin: 0 10px; font-size: 30px;">-</span>
+            <img src="https://github.com/mx1000m/satoshissummer/raw/2918fff455aa74a6c769abd081180890172db3a8/ryan.jpg" alt="Ryan" style="width: 150px; height: 150px;">
+            <span style="margin: 0 10px; font-size: 30px;">+</span>
+            <img src="https://github.com/mx1000m/satoshissummer/raw/2918fff455aa74a6c769abd081180890172db3a8/ring.jpg" alt="Ring" style="width: 150px; height: 150px;">
+        </div>
+        <div style="text-align: center; font-size: 40px;">
+            _ _ _ _ _ _
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+<!-- MODAL for planet icon -->
+<div id="planetModal" class="modal">
+    <div class="modal-content" style="text-align: center;">
+        <span class="close" onclick="closeModal('planetModal')">&times;</span>
+<hr>        
+<p>
+            Start with the "Z" that marks the end,<br>
+            Add a binary digit, not quite whole.<br>
+            Combine them both, and you'll find.
+        </p>
+<p> _ _ _ _ </p>
+<hr>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+<!-- MODAL for arrow icon -->
+<div id="arrowModal" class="modal">
+    <div class="modal-content" style="text-align: center;">
+        <span class="close" onclick="closeModal('arrowModal')">&times;</span>
+<p style="font-size: 24px; font-weight: bold; color: #ff69b4;">🤡 JOKER HINT 🤡</p>
+<p style="font-weight: 400; padding-bottom: 20px;"><b>BE AWARE:</b><br>Using the Joker Hint will burn up to <b>50,000 ONCHAIN SUMMER PTS</b>, are you a true based degen?</p>
+        <!-- The spinning wheel -->
+        <div id="wheel-container" style="position: relative;">
+            <img id="degenWheel" src="https://github.com/mx1000m/satoshissummer/raw/36389921e65ee4b71ab65f37ac6b69f4951a928d/degen-wheel.png" width="300" height="300" style="transition: transform 5s ease-out;">
+            <!-- Arrow Indicator -->
+            <div style="position: absolute; top: -20px; left: 135px;">
+                <img src="https://github.com/mx1000m/satoshissummer/raw/87f3560970c45483698e81756dad7985fe59c1ad/arrowdown.png" alt="Arrow" style="width: 30px; height: 30px;">
+            </div>
+        </div>
+
+        <!-- YOLO button -->
+        <button class="pill-button" onclick="spinDegenWheel()"><b>YOLO</b></button>
+    </div>
+</div>
+
+
+
+
+
+
+
+<div id="resultOverlay"></div>
+
+
+
+
+
+
+<!-- MODAL for Play/Mint Button -->
+<div id="playModal" class="modal">
+    <div class="modal-content" style="text-align: center;">
+        <span class="close" onclick="closeModal('playModal')">&times;</span>
+        <h2>Hello, stranger!<br>Welcome to Satoshi's Summer riddle:</h2>
+        <p>Enter a "mirrored" world where you'll search, solve, rack your brain, and join forces with fellow riddlers to unravel the mystery.</p>
+        <p><b>The first 10</b> to crack the code will earn an extra <b>100,000 Onchain Summer points.</b></p>
+<p>Goodluck.</p>
+    </div>
+</div>
+
+
+
+
+
+
+
+<script>
+
+
+
+
+
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    var overlay = document.getElementById('overlay');
+    var overlayClose = document.getElementById('overlayClose');
+
+    // Function to hide the overlay
+    function hideOverlay() {
+        overlay.style.display = 'none';
+    }
+
+    // Click event for the overlay to close it if the clicked target is the overlay itself or the close button
+    overlay.addEventListener('click', function(event) {
+        if (event.target === overlay || event.target === overlayClose) {
+            hideOverlay();
+        }
+    });
+
+    var sunIcon = document.querySelector('.sunicon');
+    if (sunIcon) {
+        sunIcon.addEventListener('click', function() {
+            overlay.style.display = 'flex'; // Show the overlay
         });
-    </script>
+    } else {
+        console.error('Sun icon not found');
+    }
+});
+
+
+
+
+
+
+
+
+
+
+
+
+const correctAnswer = "satoshi enjoy frost pizza during summer base stay cool soon banana zone";
+
+function checkAnswer(event) {
+    if (event.key === "Enter") {
+        const input = document.getElementById("searchInput").value.trim().toLowerCase();
+        let correctWords = checkCorrectWords(input, correctAnswer);
+
+        if (input === correctAnswer.toLowerCase()) {
+            openModal('correctModal');
+            triggerConfetti();  // Trigger confetti here
+        } else if (correctWords.length > 0) {
+            displayWordMatchResult(correctWords.length);
+        } else {
+            openModal('incorrectModal');
+        }
+    }
+}
+
+function checkCorrectWords(input, correctAnswer) {
+    const inputWords = input.split(" ");
+    const correctWords = correctAnswer.split(" ");
+    let matchedWords = [];
+
+    inputWords.forEach(word => {
+        if (correctWords.includes(word) && !matchedWords.includes(word)) {
+            matchedWords.push(word);
+        }
+    });
+
+    return matchedWords;
+}
+
+function displayWordMatchResult(correctWordCount) {
+    let message = `You have ${correctWordCount} correct words.`;
+    document.getElementById("wordMatchMessage").innerHTML = message;
+    openModal('wordMatchModal');
+}
+
+function openModal(modalId) {
+    document.getElementById(modalId).style.display = "block";
+}
+
+function closeModal(modalId) {
+    document.getElementById(modalId).style.display = "none";
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    var modals = document.querySelectorAll('.modal');
+    var spans = document.getElementsByClassName('close');
+
+    // Close the modal when the close button is clicked
+    for (var i = 0; i < spans.length; i++) {
+        spans[i].onclick = function() {
+            this.parentElement.parentElement.style.display = "none";
+        };
+    }
+
+    // Close the modal when clicking outside of the modal content
+    window.onclick = function(event) {
+        if (event.target.classList.contains('modal')) {
+            event.target.style.display = "none";
+        }
+    };
+});
+
+
+
+
+
+document.getElementById('walletButton').addEventListener('click', function() {
+            openModal('walletModal');
+        });
+
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = "block";
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = "none";
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            var modals = document.querySelectorAll('.modal');
+            var spans = document.getElementsByClassName('close');
+
+            // Close the modal when the close button is clicked
+            for (var i = 0; i < spans.length; i++) {
+                spans[i].onclick = function() {
+                    this.parentElement.parentElement.style.display = "none";
+                };
+            }
+
+            // Close the modal when clicking outside of the modal content
+            window.onclick = function(event) {
+                if (event.target.classList.contains('modal')) {
+                    event.target.style.display = "none";
+                }
+            };
+        });
+
+
+
+
+
+
+
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    const promoCanvas = document.getElementById('promoScratchCanvas');
+    const promoImage = document.querySelector('.image-promo img');
+    const ctx = promoCanvas.getContext('2d');
+    let isScratching = false;
+
+    // Function to resize canvas
+    function resizeCanvas() {
+        promoCanvas.width = promoImage.offsetWidth;
+        promoCanvas.height = promoImage.offsetHeight;
+        ctx.drawImage(promoOverlayImage, 0, 0, promoCanvas.width, promoCanvas.height);
+    }
+
+    window.addEventListener('resize', resizeCanvas);
+
+    const promoOverlayImage = new Image();
+    promoOverlayImage.src = 'https://github.com/mx1000m/satoshissummer/raw/81c9e7c0f7948fad3a369e6051d891f526656df9/scratch-me2.jpg';
+    promoOverlayImage.onload = function() {
+        resizeCanvas(); // Call resize initially to ensure proper dimension set
+    };
+
+    promoCanvas.addEventListener('mousedown', () => isScratching = true);
+    promoCanvas.addEventListener('mouseup', () => isScratching = false);
+    promoCanvas.addEventListener('mouseleave', () => isScratching = false);
+
+    promoCanvas.addEventListener('mousemove', function(e) {
+        if (!isScratching) return;
+        const rect = promoCanvas.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        scratch(ctx, x, y);
+    });
+
+    function scratch(ctx, x, y) {
+        ctx.globalCompositeOperation = 'destination-out';
+        ctx.beginPath();
+        ctx.arc(x, y, 30, 0, 2 * Math.PI);
+        ctx.fill();
+    }
+});
+
+
+
+
+
+
+
+
+
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    const progressText = document.getElementById('progressText');
+    const progressBar = document.getElementById('progressBar').children[0];
+    let progress = 0;
+
+    // Simulate loading progress
+    const loadingInterval = setInterval(() => {
+        progress += Math.random() * 35;
+        progress = Math.min(progress, 100);
+        progressText.textContent = Math.floor(progress) + '%';
+        progressBar.style.width = progress + '%';
+
+        if (progress >= 100) {
+            clearInterval(loadingInterval);
+            document.getElementById('loadingOverlay').style.display = 'none';
+            document.querySelector('.wrapper').style.display = 'flex';
+
+            // Automatically open the play modal after loading completes
+            openModal('playModal');
+
+            // Initialize the scratch card functionality after the loading overlay is hidden
+            initializeScratchCard();
+        }
+    }, 200);
+});
+
+function initializeScratchCard() {
+    const promoCanvas = document.getElementById('promoScratchCanvas');
+    const promoImage = document.querySelector('.image-promo img');
+    const ctx = promoCanvas.getContext('2d');
+    let isScratching = false;
+
+    // Function to resize canvas
+    function resizeCanvas() {
+        promoCanvas.width = promoImage.offsetWidth;
+        promoCanvas.height = promoImage.offsetHeight;
+        ctx.drawImage(promoOverlayImage, 0, 0, promoCanvas.width, promoCanvas.height);
+    }
+
+    window.addEventListener('resize', resizeCanvas);
+
+    const promoOverlayImage = new Image();
+    promoOverlayImage.src = 'https://github.com/mx1000m/satoshissummer/raw/81c9e7c0f7948fad3a369e6051d891f526656df9/scratch-me2.jpg';
+    promoOverlayImage.onload = function() {
+        resizeCanvas(); // Call resize initially to ensure proper dimension set
+    };
+
+    promoCanvas.addEventListener('mousedown', () => isScratching = true);
+    promoCanvas.addEventListener('mouseup', () => isScratching = false);
+    promoCanvas.addEventListener('mouseleave', () => isScratching = false);
+
+    promoCanvas.addEventListener('mousemove', function(e) {
+        if (!isScratching) return;
+        const rect = promoCanvas.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        scratch(ctx, x, y);
+    });
+
+    function scratch(ctx, x, y) {
+        ctx.globalCompositeOperation = 'destination-out';
+        ctx.beginPath();
+        ctx.arc(x, y, 30, 0, 2 * Math.PI);
+        ctx.fill();
+    }
+}
+
+
+
+
+
+
+
+
+
+
+function openModal(modalId) {
+    document.getElementById(modalId).style.display = "block";
+}
+
+function closeModal(modalId) {
+    document.getElementById(modalId).style.display = "none";
+}
+
+
+
+
+
+
+
+
+
+
+
+function openModal(modalId) {
+    document.getElementById(modalId).style.display = "block";
+    if (modalId === 'arrowModal') {
+        initializeWheel();
+    }
+}
+
+
+
+
+
+
+
+
+function spinDegenWheel() {
+    const wheel = document.getElementById('degenWheel');
+    const spins = 10; // Number of spins
+    const endRotation = 360 * spins + (360 - 75); // Calculate the end rotation
+
+    // Apply the rotation
+    wheel.style.transform = `rotate(${endRotation}deg)`;
+
+    // After the rotation completes
+    setTimeout(() => {
+        // Remove the transition effect (so it doesn't interfere if the wheel is spun again)
+        wheel.style.transition = "none";
+
+        // Keep the wheel at the final position without resetting it
+        wheel.style.transform = `rotate(${(360 - 75)}deg)`; // Ensure it stays on "Burn 0 pts"
+
+        // Re-enable the transition for the next spin
+        setTimeout(() => {
+            wheel.style.transition = "transform 5s ease-out"; // Restore the transition effect
+        }, 50); // Small delay to allow the reset to happen
+
+        // Display the result pop-up after the spin completes
+        setTimeout(() => {
+            showResultPopup();
+        }, 100); // Small delay to ensure the wheel has fully stopped
+    }, 5000); // Duration of the spin (matching the CSS transition time)
+}
+
+function showResultPopup() {
+    const resultMessage = `
+        <div style="text-align: center; padding: 20px;">
+            <h2> 0 PTS BURNT!<br>You are truly based!</h2>
+            <p>Here is your hint (save it carefully):</p>
+            <p><strong>S _ _ _ _ _ _   E _ _ _ _   F _ _ _ _   P _ _ _ _   D _ _ _ _ _   S _ _ _ _ _   B _ _ _   S _ _ _   C _ _ _   S _ _ _   B _ _ _ _ _   Z _ _ _</strong></p>
+            <button onclick="closeResultPopup()" style="background-color: #e397c9; color: #fff; border: none; border-radius: 50px; padding: 10px 20px; font-size: 18px; font-weight: bold; cursor: pointer;">Close</button>
+        </div>
+    `;
+
+    const resultPopup = document.createElement('div');
+    resultPopup.id = 'resultPopup';
+    resultPopup.style.position = 'fixed';
+    resultPopup.style.top = '50%';
+    resultPopup.style.left = '50%';
+    resultPopup.style.transform = 'translate(-50%, -50%)';
+    resultPopup.style.backgroundColor = '#0052FF';
+    resultPopup.style.border = '2px solid #fff';
+    resultPopup.style.borderRadius = '8px';
+    resultPopup.style.zIndex = '10000';
+    resultPopup.style.maxWidth = '400px';
+    resultPopup.style.width = '90%';
+    resultPopup.innerHTML = resultMessage;
+
+    document.body.appendChild(resultPopup);
+}
+
+function closeResultPopup() {
+    const resultPopup = document.getElementById('resultPopup');
+    if (resultPopup) {
+        document.body.removeChild(resultPopup);
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+function showResultPopup() {
+    // Show the overlay
+    const overlay = document.getElementById('resultOverlay');
+    overlay.style.display = 'block';
+
+    const resultMessage = `
+        <div style="text-align: center; padding: 20px;">
+            <h2> 0 PTS BURNT!<br>You are truly based!</h2>
+            <p>Here is your hint (save it carefully):</p>
+            <p><strong>S _ _ _ _ _ _ &nbsp;  E _ _ _ _  &nbsp; F _ _ _ _  &nbsp; _ _ _ _ _  &nbsp; D _ _ _ _ _  &nbsp; _ _ _ _ _ _ &nbsp;  B _ _ _&nbsp;   S _ _ _&nbsp;   C _ _ _&nbsp;   S _ _ _&nbsp;   B _ _ _ _ _ &nbsp;  _ _ _ _</strong></p>
+            <button onclick="closeResultPopup()" style="background-color: #e397c9; color: #fff; border: none; border-radius: 50px; padding: 10px 20px; font-size: 18px; font-weight: bold; cursor: pointer;">Close</button>
+        </div>
+    `;
+
+    const resultPopup = document.createElement('div');
+    resultPopup.id = 'resultPopup';
+    resultPopup.style.position = 'fixed';
+    resultPopup.style.top = '50%';
+    resultPopup.style.left = '50%';
+    resultPopup.style.transform = 'translate(-50%, -50%)';
+    resultPopup.style.backgroundColor = '#0052FF';
+    resultPopup.style.border = '2px solid #fff';
+    resultPopup.style.borderRadius = '8px';
+    resultPopup.style.zIndex = '10000';
+    resultPopup.style.maxWidth = '400px';
+    resultPopup.style.width = '90%';
+    resultPopup.innerHTML = resultMessage;
+
+    document.body.appendChild(resultPopup);
+}
+
+function closeResultPopup() {
+    const resultPopup = document.getElementById('resultPopup');
+    const overlay = document.getElementById('resultOverlay');
+    
+    if (resultPopup) {
+        document.body.removeChild(resultPopup);
+    }
+    
+    // Hide the overlay
+    overlay.style.display = 'none';
+}
+
+
+
+
+
+
+
+
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Existing event listeners
+
+    // Add event listener for the Play button
+    document.querySelector('.mint-button').addEventListener('click', function() {
+        openModal('playModal');
+    });
+});
+
+// Existing openModal and closeModal functions
+
+function openModal(modalId) {
+    document.getElementById(modalId).style.display = "block";
+}
+
+function closeModal(modalId) {
+    document.getElementById(modalId).style.display = "none";
+}
+
+
+
+
+
+
+
+
+
+
+
+
+function triggerConfetti() {
+    confetti({
+        particleCount: 150,
+        spread: 60,
+        origin: { y: 0.6 },
+        zIndex: 10001  // Ensure the confetti canvas has a high z-index
+    });
+}
+
+
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.4.0/dist/confetti.browser.min.js"></script>
+
+
+
+
 
 
 </body>
