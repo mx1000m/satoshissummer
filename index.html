@@ -952,6 +952,74 @@ Left: 20px;
 
 
 
+/* Default: Hide mobile content on non-mobile devices */
+.mobile-content {
+    display: none;
+}
+
+/* Show mobile content on devices with max-width of 768px (mobile) */
+@media only screen and (max-width: 768px) {
+    .mobile-content {
+        display: block;
+        position: relative;
+        top: 20px; /* Position the content 20px from the top */
+    }
+
+    /* Hide all other content on mobile devices */
+    .wrapper, .sidebar, .header, .banner, .content-wrapper, .nav-menu, .content-boxes, .shop-section, footer, .banner-text, .divider {
+        display: none;
+    }
+
+    /* Mobile-specific styles */
+    body, html {
+        background-color: #0052ff;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start; /* Align content to the start (top) */
+        text-align: center;
+        padding: 20px;
+    }
+
+
+   .mobile-message {
+        color: #a5bdfa;
+        font-size: 18px;
+        margin-bottom: 20px;
+        line-height: 1.5;
+        font-family: 'Roboto', sans-serif; /* Set the font to Roboto */
+        padding: 15px; /* Add padding inside the frame */
+text-transform: capitalize;
+font-weight: 900;
+    }
+
+    .mobile-image {
+        max-width: 80%;
+        height: auto;
+        border: 2px solid white; /* Add a white frame around the image */
+        border-radius: 10px; /* Optional: rounded corners for the frame */
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     </style>
@@ -973,6 +1041,19 @@ Left: 20px;
 
 
 
+<div class="mobile-content">
+    <div class="mobile-message">
+     TO SOLVE THE MYSTERY, VISIT YOUR DEKSTOP.<br><br>An extra clue for you:
+    </div>
+    <img src="https://github.com/mx1000m/satoshissummer/raw/9cf282d3f698b0aefd7272d4d3ff19d48576471e/firstword.jpg" alt="First Word Clue" class="mobile-image">
+</div>
+
+
+
+
+
+
+
 <div id="loadingOverlay">
     <!-- Title above the loading bar -->
     <div id="progressTitle">Fortune favors the based</div>
@@ -983,6 +1064,14 @@ Left: 20px;
         <div></div>
     </div>
 </div>
+
+
+
+
+
+
+
+
 
 
 
@@ -1176,11 +1265,37 @@ Mint Satoshi's Summer NFT to enter a "mirrored" world where you'll search, solve
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     <!-- MODAL for incorrect answer -->
     <div id="incorrectModal" class="modal">
         <div class="modal-content" style="text-align: center;">
             <span class="close" onclick="closeModal('incorrectModal')">&times;</span>
-            <p><strong>Total miss, riddler! <br>Grab your compass and set a new course.</p>
+            <p><strong>Total miss, riddler! <br>Grab your compass and set a new course."</p>
         </div>
     </div>
 
@@ -1339,9 +1454,6 @@ Mint Satoshi's Summer NFT to enter a "mirrored" world where you'll search, solve
              style="max-width: 100%; height: auto; margin-top: 20px;">
     </div>
 </div>
-
-
-
 
 
 
