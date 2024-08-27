@@ -923,6 +923,32 @@ font-weight: 400;
 
 
 
+#countdown-timer {
+    position: relative;
+    top: 0; /* No need to specify top since it will be in the normal flow */
+    right: 0; /* Align to the right edge of the parent */
+Left: 20px;
+    font-size: 16px;
+    color: #fff; /* Text color */
+    font-weight: bold;
+    z-index: 1000; /* Ensure it is on top */
+    background-color: #ff69b4; /* Background color */
+    padding: 10px 20px; /* Padding inside the pill */
+    border-radius: 50px; /* Makes it a pill shape */
+    margin-left: auto; /* This will push the timer to the right */
+}
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -973,6 +999,8 @@ font-weight: 400;
             <img src="https://github.com/mx1000m/satoshissummer/raw/43538dc7982d5ec5426cb215153699360aeed033/searchicon.png" class="search-icon" alt="Search Icon">
         </div>
                 </div>
+    <!-- Countdown Timer -->
+    <div id="countdown-timer"></div>
             </div>
 
             <hr class="divider">
@@ -1162,7 +1190,7 @@ Mint Satoshi's Summer NFT to enter a "mirrored" world where you'll search, solve
             <span class="close" onclick="closeModal('correctModal')">&times;</span>
             <p><strong>SUPER BASED! <br>YOU ARE ALMOST THERE...</strong></p>
 <hr>
-            <p>In Coinbase Wallet's app, my secrets you unwrap,<br>Text "satoshissummer.base.eth", that's where they do land next...</p>
+            <p>In Coinbase Wallet's app, my secrets you unwrap,<br>Text "satoshissecret.base.eth", that's where they do land next...</p>
 <hr>       
  </div>
     </div>
@@ -1777,6 +1805,54 @@ function openModal(modalId) {
 function closeModal(modalId) {
     document.getElementById(modalId).style.display = "none";
 }
+
+
+
+
+
+
+
+
+
+
+
+// Set the target date and time for the countdown
+const targetDate = new Date("September 5, 2024 18:00:00").getTime();
+
+const countdownElement = document.getElementById('countdown-timer');
+
+const countdownInterval = setInterval(() => {
+    // Get the current date and time
+    const now = new Date().getTime();
+    
+    // Calculate the difference between the target date and now
+    const timeDifference = targetDate - now;
+
+    // Time calculations for days, hours, minutes, and seconds
+    const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
+
+    // Display the result in the countdown element
+    countdownElement.innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+
+    // If the countdown is over, stop the interval and display a message
+    if (timeDifference < 0) {
+        clearInterval(countdownInterval);
+        countdownElement.innerHTML = "Time's Up!";
+    }
+}, 1000);
+
+
+
+
+
+
+
+
+
+
 
 
 
