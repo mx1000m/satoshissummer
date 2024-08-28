@@ -1473,6 +1473,7 @@ Mint Satoshi's Summer NFT to enter a "mirrored" world where you'll search, solve
 
 
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
 
 
 
@@ -1521,37 +1522,99 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
-const correctAnswer = "satoshi enjoy frost pizza during summer base stay cool soon banana zone";
+
+
+const correctWordsHashes = [
+    "da2876b3eb31edb4436fa4650673fc6f01f90de2f1793c4ec332b2387b09726f", 
+    "75fba329cb6ee8907a1f009b69353d8c0e9a8228b25a1095c7976efc1eaa259d",
+    "d7bf0c9ea6ea590ff1a44ef444aa38d0db5491e29fab83efbbbe882ac9314e84",
+    "9ed1515819dec61fd361d5fdabb57f41ecce1a5fe1fe263b98c0d6943b9b232e",
+    "76678e40cf8bdb8a83501170b65ec33d03cb2af5be9250610e7aa596c7e77d8f",
+    "e83664255c6963e962bb20f9fcfaad1b570ddf5da69f5444ed37e5260f3ef689",
+    "cae662172fd450bb0cd710a769079c05bfc5d8e35efa6576edc7d0377afdd4a2",
+    "39be15289c7942a8e7765d75584b0bce0a4a39c29a356fbaee44f63848ba6cb0",
+    "c34045c1a1db8d1b3fca8a692198466952daae07eaf6104b4c87ed3b55b6af1b",
+    "4a754148b88a68e18df1a02489950666d187e904cd88d2dc0aa16c103b94045f",
+    "b493d48364afe44d11c0165cf470a4164d1e2609911ef998be868d46ade3de4e",
+    "543e33c48b3c23d3b3ef151358533bc206fa0225ba66b89933a795451f016479"
+];
+
+const correctAnswerHash = "0b45f33b40411638e0feaebbd92e5e608f8aa21d024484ca28f8e34fb2386220"; 
 
 function checkAnswer(event) {
     if (event.key === "Enter") {
         const input = document.getElementById("searchInput").value.trim().toLowerCase();
-        let correctWords = checkCorrectWords(input, correctAnswer);
+        const inputHash = CryptoJS.SHA256(input).toString(CryptoJS.enc.Hex);
 
-        if (input === correctAnswer.toLowerCase()) {
+        if (inputHash === correctAnswerHash) {
             openModal('correctModal');
-            triggerConfetti();  // Trigger confetti here
-        } else if (correctWords.length > 0) {
-            displayWordMatchResult(correctWords.length);
+            triggerConfetti();
         } else {
-            openModal('incorrectModal');
+            // Check each word hash
+            const inputWords = input.split(' ');
+            let matchedCount = 0;
+
+            inputWords.forEach(word => {
+                const wordHash = CryptoJS.SHA256(word).toString(CryptoJS.enc.Hex);
+                if (correctWordsHashes.includes(wordHash)) {
+                    matchedCount++;
+                }
+            });
+
+            if (matchedCount > 0) {
+                displayWordMatchResult(matchedCount);
+            } else {
+                openModal('incorrectModal');
+            }
         }
     }
 }
 
-function checkCorrectWords(input, correctAnswer) {
-    const inputWords = input.split(" ");
-    const correctWords = correctAnswer.split(" ");
-    let matchedWords = [];
-
-    inputWords.forEach(word => {
-        if (correctWords.includes(word) && !matchedWords.includes(word)) {
-            matchedWords.push(word);
-        }
-    });
-
-    return matchedWords;
+function displayWordMatchResult(correctWordCount) {
+    let message = `You have ${correctWordCount} correct word${correctWordCount > 1 ? 's' : ''}.`;
+    document.getElementById("wordMatchMessage").innerHTML = message;
+    openModal('wordMatchModal');
 }
+
+function openModal(modalId) {
+    document.getElementById(modalId).style.display = "block";
+}
+
+function closeModal(modalId) {
+    document.getElementById(modalId).style.display = "none";
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const modals = document.querySelectorAll('.modal');
+    const spans = document.getElementsByClassName('close');
+
+    for (let i = 0; i < spans.length; i++) {
+        spans[i].onclick = function() {
+            this.parentElement.parentElement.style.display = "none";
+        };
+    }
+
+    window.onclick = function(event) {
+        if (event.target.classList.contains('modal')) {
+            event.target.style.display = "none";
+        }
+    };
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 function displayWordMatchResult(correctWordCount) {
     let message = `You have ${correctWordCount} correct words.`;
